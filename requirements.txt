@@ -3,3 +3,4 @@ sqlalchemy
 streamlit
 plotly
 psycopg2-binary
+statsmodels
