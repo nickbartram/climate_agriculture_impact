@@ -98,18 +98,50 @@ else:
         selected_filter = "All"
 
     # -------------------
+    # Crop filter for na_crops table
+    # -------------------
+    crop_filter_col = None
+    selected_crop_filter = "All"
+    
+    if selected_table == "na_crops" and "crop" in all_columns:
+        crop_filter_col = "crop"
+        
+        try:
+            with engine.connect() as conn:
+                result = conn.execute(text(f"SELECT DISTINCT crop FROM {selected_table} ORDER BY crop;"))
+                rows = result.fetchall()
+                crop_values = [r[0] for r in rows if r[0] is not None]
+        except Exception as e:
+            st.error(f"Could not fetch distinct crop values: {e}")
+            crop_values = []
+
+        selected_crop_filter = st.selectbox("Filter by crop:", ["All"] + crop_values)
+
+    # -------------------
     # Build + run query
     # -------------------
     cols_sql = ", ".join(selected_columns) if selected_columns else "*"
 
     if st.button("Run Query"):
         try:
+            # Build WHERE clause
+            where_conditions = []
+            params = {}
+            
             if selected_filter != "All" and filter_col:
-                sql = text(f"SELECT {cols_sql} FROM {selected_table} WHERE {filter_col} = :filter_val LIMIT 100;")
-                st.session_state.df = pd.read_sql(sql, engine, params={"filter_val": selected_filter})
-            else:
-                sql = text(f"SELECT {cols_sql} FROM {selected_table} LIMIT 100;")
-                st.session_state.df = pd.read_sql(sql, engine)
+                where_conditions.append(f"{filter_col} = :filter_val")
+                params["filter_val"] = selected_filter
+                
+            if selected_crop_filter != "All" and crop_filter_col:
+                where_conditions.append("crop = :crop_filter_val")
+                params["crop_filter_val"] = selected_crop_filter
+            
+            where_clause = ""
+            if where_conditions:
+                where_clause = "WHERE " + " AND ".join(where_conditions)
+            
+            sql = text(f"SELECT {cols_sql} FROM {selected_table} {where_clause};")
+            st.session_state.df = pd.read_sql(sql, engine, params=params)
 
             # Convert object/TEXT columns to string to avoid Arrow warnings
             for col in st.session_state.df.select_dtypes(include=["object"]).columns:
@@ -138,58 +170,77 @@ else:
             plot_type = st.radio("Select plot type:", ["Line Plot", "Scatter Plot"], horizontal=True)
             add_regression = st.checkbox("Add linear regression trendline")
 
-            # Determine grouping column
+            # Determine grouping column(s)
             group_col = None
-            if "country" in df.columns:
-                group_col = "country"
-            elif "iso_code" in df.columns:
-                group_col = "iso_code"
+            color_col = None
+            
+            # For na_crops, create a combined grouping if we have both country and crop info
+            if selected_table == "na_crops" and "crop" in df.columns:
+                if "country" in df.columns:
+                    # Create a combined column for better visualization
+                    df["country_crop"] = df["country"].astype(str) + " - " + df["crop"].astype(str)
+                    color_col = "country_crop"
+                elif "iso_code" in df.columns:
+                    df["iso_crop"] = df["iso_code"].astype(str) + " - " + df["crop"].astype(str)
+                    color_col = "iso_crop"
+                else:
+                    color_col = "crop"
+            else:
+                # Standard grouping logic for other tables
+                if "country" in df.columns:
+                    group_col = "country"
+                    color_col = "country"
+                elif "iso_code" in df.columns:
+                    group_col = "iso_code"
+                    color_col = "iso_code"
 
             # Base plot
             if plot_type == "Line Plot":
-                if group_col:
+                if color_col:
                     fig = px.line(
                         df,
                         x=x_col,
                         y=y_col,
-                        color=group_col,
-                        title=f"{y_col} vs {x_col} by {group_col}"
+                        color=color_col,
+                        title=f"{y_col} vs {x_col} by {color_col}"
                     )
                 else:
                     fig = px.line(df, x=x_col, y=y_col, title=f"{y_col} vs {x_col}")
 
                 # Add regression only if checkbox is checked
-                if add_regression and group_col:
+                if add_regression and color_col:
                     # Separate regression per group
-                    for group_val, df_group in df.groupby(group_col):
+                    for group_val, df_group in df.groupby(color_col):
                         df_group = df_group[[x_col, y_col]].dropna().sort_values(x_col)
-                        X = sm.add_constant(df_group[x_col])
-                        model = sm.OLS(df_group[y_col], X).fit()
-                        df_group["regression"] = model.predict(X)
-                        fig.add_traces(
-                            px.line(df_group, x=x_col, y="regression")
-                            .update_traces(line=dict(color="red", dash="dash"))
-                            .data
-                        )
+                        if len(df_group) > 1:  # Need at least 2 points for regression
+                            X = sm.add_constant(df_group[x_col])
+                            model = sm.OLS(df_group[y_col], X).fit()
+                            df_group["regression"] = model.predict(X)
+                            fig.add_traces(
+                                px.line(df_group, x=x_col, y="regression")
+                                .update_traces(line=dict(color="red", dash="dash"), name=f"{group_val} (trend)")
+                                .data
+                            )
                 elif add_regression:
                     # Single regression if no grouping
                     df_reg = df[[x_col, y_col]].dropna().sort_values(x_col)
-                    X = sm.add_constant(df_reg[x_col])
-                    model = sm.OLS(df_reg[y_col], X).fit()
-                    df_reg["regression"] = model.predict(X)
-                    fig.add_traces(
-                        px.line(df_reg, x=x_col, y="regression")
-                        .update_traces(line=dict(color="red", dash="dash"))
-                        .data
-                    )
+                    if len(df_reg) > 1:
+                        X = sm.add_constant(df_reg[x_col])
+                        model = sm.OLS(df_reg[y_col], X).fit()
+                        df_reg["regression"] = model.predict(X)
+                        fig.add_traces(
+                            px.line(df_reg, x=x_col, y="regression")
+                            .update_traces(line=dict(color="red", dash="dash"), name="Trend")
+                            .data
+                        )
 
             else:  # Scatter plot
                 fig = px.scatter(
                     df,
                     x=x_col,
                     y=y_col,
-                    color=group_col if group_col else None,
-                    title=f"{y_col} vs {x_col}" + (f" by {group_col}" if group_col else ""),
+                    color=color_col if color_col else None,
+                    title=f"{y_col} vs {x_col}" + (f" by {color_col}" if color_col else ""),
                     trendline="ols" if add_regression else None
                 )
 
@@ -227,5 +278,3 @@ if st.button("Run Custom SQL"):
 
         except Exception as e:
             st.error(f"Error running custom query: {e}")
-
-
