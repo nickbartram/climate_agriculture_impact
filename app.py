@@ -13,6 +13,42 @@ engine = create_engine(
     f"postgresql+psycopg2://{pk.postgres_user}:{pk.postgres_pass}@climate-db.croamw4iqxpi.us-east-2.rds.amazonaws.com:5432/climate_db"
 )
 
+# ------------------------
+# Custom column labels for plots
+# ------------------------
+
+COLUMN_LABELS = {
+    
+    # Common columns
+    "year": "Year",
+    "iso_code": "Country Code",
+    "country": "Country",
+
+    # co2 table
+    "co2": "CO₂ Emissions (metric tons)",
+    "total_ghg": "Total GHG Emissions (metric tons)",
+    "population": "Population",
+    "gdp": "GDP (USD)",
+    "co2_growth_prct": "CO₂ Percent Growth",
+    "co2_per_capita": "CO₂ per capita",
+    "co2_per_gdp": "CO₂ per GDP",
+
+    # rainfall table
+    "total_precip_mm": "Total Precipitation (mm)",
+
+    # diet tables
+    "percentage": "Percentage of Population",
+    "total_million": "Number of People (in millions)",
+
+    # na_crops table
+    "production_mt": "Production (MT)"
+}
+
+# Small function to get labels for plots
+def get_label(column_name):
+    """Get more descriptive and formal looking labels for a column, return the column name if no custom label exists"""
+    return COLUMN_LABELS.get(column_name, column_name.replace("_", " ").title())
+
 # -------------------
 # Sidebar: Table schema
 # -------------------
@@ -194,6 +230,11 @@ else:
                     group_col = "iso_code"
                     color_col = "iso_code"
 
+            # Get human-readable labels for plots, calling custom function
+            x_label = get_label(x_col)
+            y_label = get_label(y_col)
+            color_label = get_label(color_col) if color_col else None
+
             # Base plot
             if plot_type == "Line Plot":
                 if color_col:
@@ -202,7 +243,12 @@ else:
                         x=x_col,
                         y=y_col,
                         color=color_col,
-                        title=f"{y_col} vs {x_col} by {color_col}"
+                        title=f"{y_label} vs {x_label} by {color_label}",
+                        labels={
+                            x_col: x_label,
+                            y_col: y_label,
+                            color_col: color_label
+                        }
                     )
                 else:
                     fig = px.line(df, x=x_col, y=y_col, title=f"{y_col} vs {x_col}")
@@ -235,12 +281,22 @@ else:
                         )
 
             else:  # Scatter plot
+
+                # Define labels for scatter plot
+                scatter_labels = {
+                    x_col: x_label,
+                    y_col: y_label
+                }
+                if color_col:
+                    scatter_labels[color_col] = color_label
+
+                # Scatter fig    
                 fig = px.scatter(
                     df,
                     x=x_col,
                     y=y_col,
                     color=color_col if color_col else None,
-                    title=f"{y_col} vs {x_col}" + (f" by {color_col}" if color_col else ""),
+                    title=f"{y_label} vs {x_label}" + (f" by {color_label}" if color_col else ""),
                     trendline="ols" if add_regression else None
                 )
 
