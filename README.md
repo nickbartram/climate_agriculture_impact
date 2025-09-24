@@ -30,7 +30,7 @@ The next dataset comes from the Food and Agriculture Organization and World Bank
 
 ![1758303866928](image/README/1758303866928.png)
 
-The next dataset also comes from the World Bank but also the Climate Change Knowledge Portal (CCKP: https://climateknowledgeportal.worldbank.org/). This CSV was obtained through an API request, looking for a timeseries of annual rainfall from 1908-2024. The specific API request in found in the 'main_backup.ipynb' or 'CCKP_rainfall_data.ipynb' notebooks of this repo. A full citation come be found in [References](#references).
+The next dataset also comes from the World Bank but also the Climate Change Knowledge Portal (CCKP: https://climateknowledgeportal.worldbank.org/). This CSV was obtained through an API request, looking for a timeseries of annual rainfall from 1908-2024. The specific API request in found in the `main_backup.ipynb` or `CCKP_rainfall_data.ipynb` notebooks of this repo. A full citation come be found in [References](#references).
 
 ![1758303977816](image/README/1758303977816.png)     ![1758304019752](image/README/1758304019752.png)
 
@@ -38,10 +38,34 @@ Finally datasets of crop production of Canada and the United States of America w
 
 ## Methodology
 
-This project required some extensive research to find the appropriate datasets. Once the research was complete the ETL (Extract, Transform, Load) process began in conjunction with EDA (Exploratory Data Analysis).
+Initial research centered on climate and agriculure datasets. This project consists of real-world data compiled from many sources (World Bank, OWID, FAO, USDA, etc. ) to a single PostgreSQL database hosted on RDS.
 
-Other datasets and approaches were considered including FAO Aqua Stat (concerning globally water supply) and raster files precise regional crop production.
+![1758742548180](image/README/1758742548180.png) ![1758742579823](image/README/1758742579823.png)
 
+After initial research, an extensive ETL (extract, transform, load) and EDA (exploratory data analysis) stage began in VSCode by loading the datasets to with pandas to a jupyter notebook `.ipynb` file. 
+
+Here each dataset was loaded into a single large notebook file to explore the data. 
+
+Example (OWID):
+
+![1758742951679](image/README/1758742951679.png)
+
+Key columns were identified and unneccesary columns were dropped. However, this was still a preliminary and exploratory stage and final decisions were not made at this point. The purpose of this stage was to get to know the data, wide commonalities and decide how best to correlate the different datasets and coalesce them into a single database.
+
+Example (OWID):
+
+![1758742968008](image/README/1758742968008.png)
+
+It was decided that the maximum range for this database would be the years 1908-2024. Some datasets contained much more than that, others much less. This date range was chosen to explore as much data as possible without overreaching.
+
+Once all the datasets were successfully loaded into pandas, separate smaller `.ipynb` notebooks were created to to continue the ETL process. A full ETL pipeline was considered, however for the purposes of this project a single pipeline was not necessary. A separate notebook was created for each dataset (except for the Stats Can and USDA datasets). The idea was to create smaller single files to avoid a long scrolling single notebook for all the transformations. 
+
+List of separate ETL files:
+
+* CCKP rainfall file: `CCKP_rainfall_date.ipynb`
+* FAO Healthy Diet Affordability file: `healthy_diet.ipynb`
+* OWID CO₂ emissions file: `owid_date.ipynb`
+* Stats Can and USDA crop files: `crop_date.ipynb`
 
 ## Results
 
