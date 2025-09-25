@@ -186,3 +186,32 @@ However, if you are so inclined, you can try your hand at some custom queries in
 - USDA. *Quick Stats.* Available at: [https://quickstats.nass.usda.gov/](https://quickstats.nass.usda.gov/)
 
 ## Usage
+
+`main.ipynb` contains the initial loading and examination of the files. This notebook file simply checks to see if we can load the data and examines it quickly to see if we can work with it. The project started in this file. A lot of trial and error has been edited out of this file including other datasets that were ultimately excluded. View this file to see initial EDA and research phase of the project.
+
+The main ETL files were stated above in [Methodology](#methodology):
+
+* CCKP rainfall file: `CCKP_rainfall_date.ipynb`
+* FAO Healthy Diet Affordability file: `healthy_diet.ipynb`
+* OWID CO₂ emissions file: `owid_date.ipynb`
+* Stats Can and USDA crop files: `crop_date.ipynb`
+
+These files contain a much more elaborate transformation of the data that in `main.ipynb`. View these files to see the ETL phase of this project, and a little EDA in the form of visualizations.
+
+SQL_upload.ipynb was used to load the tables to a PostgreSQL database and AWS RDS database.
+
+The Docker image was created using `Dockerfile` and `requirements.txt`. 
+
+The app itself (located: https://climate-app-670584475490.northamerica-northeast2.run.app/) can be used intuitively. 
+
+* use the sidebar to select a table
+  * the tables schema and a brief description will display below
+* use the first dropdown menu to select with columns to display
+* filter by country
+  * filter also by crop if using the 'na_crops' table
+* hit "Run Query" button
+  * a table will display below to your specifications
+* use "Line Plot" or "Scatter Plot" buttons to pick either plot
+  * optionally check the "Add linear regression trendline" box
+* run custom SQL queries of the database using the SQL Playground
+* enjoy!
