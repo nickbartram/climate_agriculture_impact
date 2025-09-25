@@ -1,9 +1,3 @@
-Dockerfile created as a container for the streamlit app to be hosted on Google Cloud:
-
-Link to Cloud Run site:
-
-https://climate-app-670584475490.northamerica-northeast2.run.app/
-
 # README for Climate Agriculture Impact
 
 ## Introduction
@@ -14,7 +8,7 @@ This app (climate-app) will be hosted on Google Cloud Run here:
 
 https://climate-app-670584475490.northamerica-northeast2.run.app/
 
-![1758297167150](image/README/1758297167150.png)           ![1758297247003](image/README/1758297247003.png)
+![1758297167150](image/README/1758297167150.png)           ![1758829704146](image/README/1758829704146.png)
 
 ## Data
 
@@ -200,9 +194,9 @@ These files contain a much more elaborate transformation of the data that in `ma
 
 SQL_upload.ipynb was used to load the tables to a PostgreSQL database and AWS RDS database.
 
-The Docker image was created using `Dockerfile` and `requirements.txt`. 
+The Docker image was created using `Dockerfile` and `requirements.txt`.
 
-The app itself (located: https://climate-app-670584475490.northamerica-northeast2.run.app/) can be used intuitively. 
+The app itself (located: https://climate-app-670584475490.northamerica-northeast2.run.app/) can be used intuitively.
 
 * use the sidebar to select a table
   * the tables schema and a brief description will display below
