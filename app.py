@@ -99,7 +99,7 @@ if selected_table:
 # -------------------
 # Main area
 # -------------------
-st.title("🌍 Climate Data Explorer")
+st.title("Climate Data Explorer")
 
 if not selected_table:
     st.info("Choose a table from the sidebar to start.")
@@ -308,10 +308,11 @@ else:
 # Custom SQL playground (bottom of page)
 # -------------------
 st.markdown("---")  # horizontal rule for separation
-st.subheader("💻 SQL Playground")
+st.subheader("SQL Playground")
 st.markdown(
-    "For advanced users: enter a custom SQL query to explore the data directly. "
-    "Be careful — this is just for experimentation and could return large results."
+    "Use PostgreSQL to query the data directly, don't worry this is only optional!"
+    "Try 'SELECT * FROM <insert table> to view an entire table."
+    
 )
 
 custom_query = st.text_area(
