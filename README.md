@@ -4,7 +4,7 @@
 
 This project analyzes real-world climate, agriculture, CO₂ emission, and healthy diet datasets. The project looks to visualize and explore these datasets in concise and informative Streamlit app.
 
-This app (climate-app) will be hosted on Google Cloud Run here:
+This app (climate-app) is hosted on Google Cloud Run and availalbe to explore here:
 
 https://climate-app-670584475490.northamerica-northeast2.run.app/
 
