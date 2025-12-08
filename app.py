@@ -310,9 +310,7 @@ else:
 st.markdown("---")  # horizontal rule for separation
 st.subheader("SQL Playground")
 st.markdown(
-    "Use PostgreSQL to query the data directly, don't worry this is only optional!"
-    "Try 'SELECT * FROM <insert table> to view an entire table."
-    
+    "Use PostgreSQL to query the data directly, don't worry this is only optional!"    
 )
 
 custom_query = st.text_area(

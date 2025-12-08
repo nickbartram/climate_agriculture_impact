@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This project analyzes real-world climate, agriculture, CO₂ emission, and healthy diet datasets. The project looks to visualize and explore these datasets in concise and informative streamlit app.
+This project analyzes real-world climate, agriculture, CO₂ emission, and healthy diet datasets. The project looks to visualize and explore these datasets in concise and informative Streamlit app.
 
 This app (climate-app) will be hosted on Google Cloud Run here:
 
@@ -16,11 +16,11 @@ The data for this project comes from several different sources:
 
 ![1758303745328](image/README/1758303745328.png)
 
-First a very large dataset from Our World in Data (OWID: https://ourworldindata.org/) the shows global CO₂ emissions since the year 1750. This contains data from every country in the world, it's a large CSV file that was downloaded directly from the site (full citation in [References](#references)).
+First a very large dataset from Our World in Data (OWID: https://ourworldindata.org/) that shows global CO₂ emissions since the year 1750. This contains data from every country in the world, it's a large CSV file that was downloaded directly from the OWID site (full citation in [References](#references)).
 
 ![1758303779027](image/README/1758303779027.png)              ![1758303814353](image/README/1758303814353.png)
 
-The next dataset comes from the Food and Agriculture Organization and World Bank (World Bank: https://data.worldbank.org/). This dataset shows the affordability of a healthy diet globally. It shows how many people are able to afford a healthy diet in each country. This was another CSV file downloaded directly from the site (full citation in [References](#references)).
+The next dataset comes from the Food and Agriculture Organization (FAO) and World Bank (World Bank: https://data.worldbank.org/). This dataset shows the affordability of a healthy diet globally. It shows how many people are able to afford a healthy diet in each country. This was another CSV file downloaded directly from the site (full citation in [References](#references)).
 
 ![1758303866928](image/README/1758303866928.png)
 
@@ -28,15 +28,20 @@ The next dataset also comes from the World Bank but also the Climate Change Know
 
 ![1758303977816](image/README/1758303977816.png)     ![1758304019752](image/README/1758304019752.png)
 
-Finally datasets of crop production of Canada and the United States of America were found at Statistics Canada (Stats Can: https://www.statcan.gc.ca/en/start) and the United States Department of Agriculture Quick Stats (USDA Quick Stats: https://www.nass.usda.gov/Quick_Stats/). These two datasets contains information on historical wheat and corn production that was used for this project. A full citation come be found in [References](#references).
+Finally datasets of crop production of Canada and the United States of America were found at Statistics Canada (Stats Can: https://www.statcan.gc.ca/en/start) and the United States Department of Agriculture Quick Stats (USDA Quick Stats: https://www.nass.usda.gov/Quick_Stats/). These two datasets contain information on historical wheat and corn production; portions of which were used that used for this project. A full citation come be found in [References](#references).
+
+This is the same data used in two other projects for this portfolio. The other projects are available here:
+
+* [https://github.com/nickbartram/tableau_climate.git](https://github.com/nickbartram/tableau_climate.git)
+* [https://github.com/nickbartram/flask_app](https://github.com/nickbartram/flask_app)
 
 ## Methodology
 
-Initial research centered on climate and agriculure datasets. This project consists of real-world data compiled from many sources (World Bank, OWID, FAO, USDA, etc. ) to a single PostgreSQL database hosted on RDS.
+Initial research centered on climate and agriculture datasets. This project consists of real-world data compiled from many sources (World Bank, OWID, FAO, USDA, etc. ) to a single PostgreSQL database hosted on RDS.
 
 ![1758742548180](image/README/1758742548180.png) ![1758742579823](image/README/1758742579823.png)
 
-After initial research, an extensive ETL (extract, transform, load) and EDA (exploratory data analysis) stage began in VSCode by loading the datasets to with pandas to a jupyter notebook `.ipynb` file.
+After initial research, an extensive ETL (extract, transform, load) and EDA (exploratory data analysis) stage began in VSCode by loading the datasets with pandas to a jupyter notebook `.ipynb` file.
 
 Here each dataset was loaded into a single large notebook file to explore the data.
 
@@ -44,7 +49,7 @@ Example (OWID):
 
 ![1758742951679](image/README/1758742951679.png)
 
-Key columns were identified and unneccesary columns were dropped. However, this was still a preliminary and exploratory stage and final decisions were not made at this point. The purpose of this stage was to get to know the data, wide commonalities and decide how best to correlate the different datasets and coalesce them into a single database.
+Key columns were identified and unnecessary columns were dropped. However, this was still a preliminary and exploratory stage and final decisions were not made at this point. The purpose of this stage was to get to know the data, wide commonalities and decide how best to correlate the different datasets and coalesce them into a single database.
 
 Example (OWID):
 
@@ -52,7 +57,7 @@ Example (OWID):
 
 It was decided that the maximum range for this database would be the years 1908-2024. Some datasets contained much more than that, others much less. This date range was chosen to explore as much data as possible without overreaching.
 
-Once all the datasets were successfully loaded into pandas, separate smaller `.ipynb` notebooks were created to to continue the ETL process. A full ETL pipeline was considered, however for the purposes of this project a single pipeline was not necessary. A separate notebook was created for each dataset (except for the Stats Can and USDA datasets). The idea was to create smaller single files to avoid a long scrolling single notebook for all the transformations.
+Once all the datasets were successfully loaded into pandas, separate smaller `.ipynb` notebooks were created to continue the ETL process. A full ETL pipeline was considered, however for the purposes of this project a single pipeline was not necessary. A separate notebook was created for each dataset (except for the Stats Can and USDA datasets). The idea was to create smaller single files to avoid a long scrolling single notebook for all the transformations.
 
 List of separate ETL files:
 
@@ -67,7 +72,7 @@ Examples below (crop table and rainfall table):
 
 ![1758822157424](image/README/1758822157424.png)![1758822187735](image/README/1758822187735.png)
 
-Some visuals were also created to view the data. This served as an exploration of the data, as well as the concept for future visuals within the streamlit app. These interactive visuals were created with ploty express library (with the help of the sklearn library for linear regressions). They are located within the separate ETL files mentioned above (`crop_data.ipynb` , `CCKP_rainfall_data.ipynb` , etc.)
+Some visuals were also created to view the data. This served as an exploration of the data, as well as the concept for future visuals within the Streamlit app. These interactive visuals were created with Ploty express library (with the help of the Sklearn library for linear regressions). They are located within the separate ETL files mentioned above (`crop_data.ipynb` , `CCKP_rainfall_data.ipynb` , etc.)
 
 Example (crop and rainfall visuals):
 
@@ -75,7 +80,7 @@ Example (crop and rainfall visuals):
 
 ![1758822360790](image/README/1758822360790.png)
 
-Next the clean uniform tables were all saved the the Output directory of the repository.
+Next the clean uniform tables were all saved the Output directory of the repository.
 
 ![1758822591211](image/README/1758822591211.png)
 
@@ -87,11 +92,11 @@ Each table was uploaded to the RDS PostgreSQL database.
 
 ![1758822926893](image/README/1758822926893.png)
 
-Two major steps remained: creating the streamlit app and pushing the app to Google Cloud Run.
+Two major steps remained: creating the Streamlit app and pushing the app to Google Cloud Run.
 
-The streamlit app was created in a python script (`.py`) file named `app.py`. Streamlit requires it's own syntax, but it is fairly easy to use and to learn. The app consists of a sidebar with a dropdown menu for each table, a main area with dropdown menus to select columns within the table (and countries, and crops), a visual section, and an SQL playground to make custom SQL queries:
+The Streamlit app was created in a python script (`.py`) file named `app.py`. Streamlit requires it's own syntax, but it is fairly easy to use and to learn. The app consists of a sidebar with a dropdown menu for each table, a main area with dropdown menus to select columns within the table (and countries, and crops), a visual section, and an SQL playground to make custom SQL queries:
 
-Example (begining of sidebar code):
+Example (beginning of sidebar code):
 
 ![1758823217942](image/README/1758823217942.png)
 
@@ -107,9 +112,7 @@ Finally pushing the app to Google Cloud Run so that it could be publicly availab
 
 ![1758823402175](image/README/1758823402175.png)
 
-Once the Docker image was created, pushing it to Google Cloud Run required setting up a project with their UI, then pushing the Docker image to the project with Google Cloud SDK:
-
-![1758823578071](image/README/1758823578071.png)
+Once the Docker image was created, pushing it to Google Cloud Run required setting up a project with their UI, then pushing the Docker image to the project with Google Cloud SDK.
 
 ## Results
 
@@ -117,21 +120,21 @@ The result of all that work culminated in a working app: https://climate-app-670
 
 That link was listed in the [Introduction](#introduction) section, and it's the same one here as well.
 
-The app allows users to create their own plots using data from our database. The app allows users to views correlations in (Canada and the United States) between CO₂ emissions, corn and wheat produciton, rainfall, and healthy diets. There are no hard causal links viewed here, however a few things stand out.
+The app allows users to create their own plots using data from our database. The app allows users to views correlations in (Canada and the United States) between CO₂ emissions, corn and wheat production, rainfall, and healthy diets. There are no hard causal links viewed here, however a few things stand out.
 
 ##### CO₂ Emissions
 
 ![1758825520358](image/README/1758825520358.png)
 
-CO₂ emissions have increased greatly in North America in the past century, however the trend in the new millenium is downward. Perhaps efforts to curb emissions have been at least partially successful, or maybe there are other factors at play here.
+CO₂ emissions have increased greatly in North America in the past century, however the trend in the new millennium is downward. Perhaps efforts to curb emissions have been at least partially successful, or maybe there are other factors at play here.
 
-Although the more recent years show a slight downturn in emissions, the overall trend is still a drastic increase. The linear regressions (red dash lines) show a clear upward direction.
+Although recent years show a slight downturn in emissions, the overall trend is still a drastic increase. The linear regressions (red dash lines) show a clear upward direction.
 
 ##### Precipitation
 
 ![1758825292362](image/README/1758825292362.png)
 
-Even though Canada is larger country than the United States, it has less precipitation. This could be because Canada has large dry and cold areas, like the Arctic, which does not have a lot of precipitaion. The United States, on the other hand, is much warmer on average and has very humid areas in the Southeast. The United States also has large rainfall events like hurricanes, of which Canada has relatively fewer.
+Even though Canada is larger country than the United States, it has less precipitation. This could be because Canada has large dry and cold areas, like the Arctic, which does not have a lot of precipitation. The United States, on the other hand, is much warmer on average and has very humid areas in the Southeast. The United States also has large rainfall events like hurricanes, of which Canada has relatively fewer.
 
 The average precipitation seems to be increasing, similar to the CO₂ emissions in the previous table. That is a correlation that could be worth investigating.
 
@@ -149,13 +152,13 @@ The overall increase of the corn production could also be related to the GDP of 
 
 ![1758826045867](image/README/1758826045867.png)
 
-Interestingly, this healthy diet afforadibility table is the only one in this database with a downward trajectory. Compared to the GDP plot above, it's striking to see that as the countries are worth more, it's citizens are on average able to afford less. There's more corn and wheat, more rainfall, the countries are worth more, but still there are more people unable to afford a healthy diet.
+Interestingly, this healthy diet affordability table is the only one in this database with a downward trajectory. Compared to the GDP plot above, it's striking to see that as the countries are worth more, it's citizens are on average able to afford less. There's more corn and wheat, more rainfall, the countries are worth more, but still there are more people unable to afford a healthy diet.
 
 Of course there are a myriad of different factors at play here. Not to mention that these diet tables notably have a much smaller date range than the others (2017-2023). In this limited 6 year range, perhaps we're missing the overall trend throughout the century. If we took only the last 6 years of CO₂ emissions, for example, we would see an overall downward trajectory.
 
 ## Conclusion
 
-This project successfully created a streamlit app that can visualize key factors in climate and agriculture in North America. This narrow goal was acheived however, a larger scientific analyze of the data has been omitted.
+This project successfully created a Streamlit app that can visualize key factors in climate and agriculture in North America. This narrow goal was achieved however, a larger scientific analysis of the data has been omitted.
 
 There was no hypothesis to test here: only an examination of some relevant data, collected from a variety of real-world sources, and consolidated here from precursory evaluation.
 
