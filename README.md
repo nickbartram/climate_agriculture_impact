@@ -82,7 +82,7 @@ List of separate ETL files:
 * OWID CO₂ emissions file: `owid_date.ipynb`
 * Stats Can and USDA crop files: `crop_date.ipynb`
 
-The transformations of the datasets involved dropping even more columns, converting units of measurement, casting to appropriate values, renaming columns, among other things to create uniform looking tables.
+The transformations of the datasets involved dropping even more columns, converting units of measurement, casting to appropriate values, renaming columns, among other things to create uniform looking tables. Delete this.
 
 Examples below (crop table and rainfall table):
 
